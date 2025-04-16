@@ -107,7 +107,7 @@ async function printLogo() {
   );
   
   console.log(
-    boxen(chalk.blue(`🤖 POLY BCA INVOICE GENERATOR BOT v1.0`), {
+    boxen(chalk.blue(`🤖 BCA INVOICE GENERATOR BOT v1.0`), {
       padding: 1,
       margin: 1,
       borderStyle: 'double',
@@ -323,7 +323,6 @@ async function generateInvoiceImage(count) {
   
   const buffer = canvas.toBuffer('image/jpeg');
   const fileName = `bca_invoice_${count}_${Date.now()}.jpg`;
-  fs.writeFileSync(fileName, buffer);
   
   return { 
     fileName, 
@@ -402,7 +401,6 @@ async function generateAndUploadInvoice(authToken, count) {
     console.log(chalk.gray(`⏱️ Processed at: ${new Date().toLocaleTimeString()}`));
     console.log(chalk.yellow('='.repeat(50)));
     
-    fs.unlinkSync(fileName);
     return { 
       success: true, 
       points: saveResponse.data.msg.my_point,
@@ -437,6 +435,10 @@ async function runSequentialUploads(authToken, totalCount) {
     const progressBar = showProgressBar(completedCount, totalCount);
     console.log(chalk.green(`${progressBar}`));
     console.log(chalk.yellow('='.repeat(50)));
+    
+    const delay = 3000 + Math.random() * 5000;
+    console.log(chalk.gray(`⏱️ Waiting ${(delay/1000).toFixed(1)} seconds before next request...`));
+    await new Promise(resolve => setTimeout(resolve, delay));
   }
   
   return { totalCount, successCount, totalPoints };
